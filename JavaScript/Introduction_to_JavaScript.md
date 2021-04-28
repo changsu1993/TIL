@@ -20,7 +20,7 @@ JavaScript 파일은 확장자가 .js이다.
 # 2. 알림 창 띄우기
 
 <br>
-<img src="img/01_alert.PNG" alt="alert"/>
+<img src="img/01_alert.png" alt="alert"/>
 <br><br>
 위 alert창은 HTML과 CSS 필요없이 JavaScript로 박스를 띄울 수 있다.
 
