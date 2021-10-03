@@ -5,8 +5,13 @@
 API(Application Programming Interface)는 응용 프로그램에서 사용할 수 있도록, 운영 체제나 프로그래밍 언어가 제공하는 기능을 제어할 수 있게 만든 인터페이스를 말한다.
 
 REST API는 REST 아키텍처 스타일의 디자인 원칙을 준수하는 API이다. <br>
-최근 openAPI등을 제공하는 회사들은 대부분 REST API를 제공한다.
-<br><br>
+최근 openAPI등을 제공하는 회사들은 대부분 REST API를 제공한다. <br><br>
+**RESTful이란** <br>
+RESTful은 일반적으로 REST라는 아키텍처를 구현하는 웹 서비스를 나타내기 위해 사용되는 용어이다. <br>
+REST API를 제공하는 웹 서비스를 RESTful 하다고 할 수 있다. <br>
+즉, REST 원리를 따르는 시스템은 RESTful이란 용어로 지칭된다. <br>
+
+<br>
 
 ## REST 구성
 
@@ -22,7 +27,7 @@ REST API는 REST 아키텍처 스타일의 디자인 원칙을 준수하는 API�
 
 **CRUD**<br>
 POST - POST를 통해 해당 URI를 요청하면 리소스를 생성한다. <br>
-GET - GET을 통해 해당 리소스를 조회한다. 리소스를 조회하고 해당 도큐먼트에 대한 자세한 정보를 가져온다.
+GET - GET을 통해 해당 리소스를 조회한다. 리소스를 조회하고 해당 도큐먼트에 대한 자세한 정보를 가져온다. <br>
 PUT - PUT을 통해 해당 리소스를 수정한다. <br>
 DELETE - DELETE를 통해 리소스를 삭제한다.
 
@@ -110,14 +115,18 @@ http://restapi.example.com/houses/apartments
 http://restapi.example.com/animals/mammals/whales
 ```
 
+<br>
+
 **URI 마지막 문자로 슬래시(/)를 포함하지 않는다.**
 URI에 포함되는 모든 글자는 리소스의 유일한 식별자로 사용되어야 하며 URI가 다르다는 것은 리소스가 다르다는 것이고, 역으로 리소스가 다르면 URI도 달라져야 한다. <br>
 REST API는 분명한 URI를 만들어 통신을 해야 하기 때문에 혼동을 주지 않도록 URI 경로의 마지막에는 슬래시(/)를 사용하지 않는다.
 
 ```javascript
-    http://restapi.example.com/houses/apartments/ (X)
-    http://restapi.example.com/houses/apartments  (0)
+http://restapi.example.com/houses/apartments/ (X)
+http://restapi.example.com/houses/apartments  (0)
 ```
+
+<br>
 
 **하이픈(-)은 URI 가독성을 높이는데 사용** <br>
 불가피하게 긴 URI경로를 사용하게 된다면 하이픈을 사용해 가독성을 높일 수 있다.
@@ -134,5 +143,55 @@ RFC 3986(URI 문법 형식)은 URI 스키마와 호스트를 제외하고는 대
 
 **파일확장자는 URI에 포함하지 않는다.** <br>
 REST API에서는 메시지 바디 내용의 포맷을 나타내기 위한 파일 확장자를 URI 안에 포함시키지 않는다. Accept header를 사용한다.
+<br><br>
 
-**리소스 간의 관계를 표현하는 방법**
+**리소스 간의 관계를 표현하는 방법** <br>
+REST 리소스 간에는 연관 관계가 있을 경우
+
+```javascript
+/리소스명/리소스 ID/관계가 있는 다른 리소스명
+
+ex) GET : /users/{userid}/devices (일반적으로 소유 ‘has’의 관계를 표현할 때)
+```
+
+<br>
+
+**자원을 표현하는 Collection과 Document** <br>
+
+Document는 문서 또는 객체, Collection은 문서들의 집합, 객체들의 집합이다. <br>
+Collection과 Document는 모두 리소스라고 표현할 수 있고, URI에 표현할 수 있다.
+
+```javascript
+http:// restapi.example.com/sports/soccer
+Collection: sports , Document: soccer
+
+http:// restapi.example.com/sports/soccer/players/13
+Collection: sports, players
+Document: soccer, 13
+```
+
+ <br>
+
+**HTTP 응답 상태 코드** <br>
+잘 설계된 REST API는 리소스에 대한 응답을 잘 내어주는 것까지 포함되어야 한다. 정확한 응답의 상태코드만으로도 많은 정보를 전달할 수 있기 때문에 응답의 상태코드 값을 명확히 돌려주는 것은 중요한 일이다. <br>
+
+1xx : 전송 프로토콜 수준의 정보 교환 <br>
+2xx : 클라이언트 요청이 성공적으로 수행 <br>
+3xx : 요청을 완료하기 위해 클라이언트가 추가적인 행동을 취해야 함 <br>
+4xx : 클라이언트의 요청이 부적절할 경우 <br>
+5xx : 서버에 문제가 있을 경우
+<br><br><br>
+
+---
+
+## References <br>
+
+- https://spoqa.github.io/2012/02/27/rest-introduction.html
+
+- https://www.redhat.com/ko/topics/api/what-is-a-rest-api
+
+- https://ko.wikipedia.org/wiki/REST
+
+- https://meetup.toast.com/posts/92
+
+- https://brainbackdoor.tistory.com/53
