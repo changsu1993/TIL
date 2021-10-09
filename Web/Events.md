@@ -17,3 +17,29 @@ https://developer.mozilla.org/ko/docs/Web/Events
 - EventTarget.addEventListener() **이벤트 리스너 추가**
 - EventTarget.removeEventListener() **특정한 이벤트 리스너 제거**
 - EventTarget.dispatchEvent() **인공적으로 이벤트 전달 및 발생**
+
+<br><br>
+
+## Event delegation
+
+사용자의 액션에 의해 이벤트 발생 시 이벤트는 document 까지 버블링 되어 올라간다. 이 때문에 자식 엘리먼트에서 발생하는 이벤트를 부모 엘리먼트에서도 감지할 수 있다. 이러한 동작을 이용해 이벤트 위임을 할 수 있다. 특정 엘리먼트에 각각의 이벤트를 등록하지 않고 하나의 부모에 등록하여 부모에게 이벤트를 위임하는 방법이다.
+
+```javascript
+<ul>
+  <li><button id="file">파일</button></li>
+  <li><button id="edit">편집</button></li>
+  <li><button id="view">보기</button></li>
+</ul>
+
+<script>
+const ul = document.querySelector('ul');
+ul.addEventListener('click', event => {
+  if(target.id === 'file') {
+    // 파일 메뉴 동작
+  } else if (target.id === 'edit') {
+    // 편집 메뉴 동작
+  } else if (target.id === 'view') {
+    // 보기 메뉴 동작
+});
+</script>
+```
