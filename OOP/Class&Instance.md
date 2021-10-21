@@ -55,3 +55,25 @@ user1.password = "1234"
 
 user1.say_hello()
 ```
+
+<br>
+
+### 특수 메소드 (magic method or special method)
+
+특정 상황에서 자동으로 호출되는 메소드(인스턴스가 생성될 때 자동으로 호출) <br>
+이름 앞 뒤로 언더바가 두 개씩 존재
+
+```python
+class User:
+  def __init__(self, name, email, password):
+    self.name = name
+    self.email = email
+    self.password = password
+
+user1 = User("Python", "python@gamil.com", "1234")
+# 1. User 인스턴스 생성
+# 2. __init__메소드 자동 호출
+# self에는 생성된 User인스턴스가 들어간다.
+# 그 후 괄호 안에 값들이 순서대로 들어간다.
+# 인스턴스 변수들의 초기값 설정
+```
