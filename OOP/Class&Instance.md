@@ -77,3 +77,19 @@ user1 = User("Python", "python@gamil.com", "1234")
 # 그 후 괄호 안에 값들이 순서대로 들어간다.
 # 인스턴스 변수들의 초기값 설정
 ```
+
+```python
+class User:
+  def __init__(self, name, email, password):
+    self.name = name
+    self.email = email
+    self.password = password
+
+# double underscore (dunder 메소드)
+  def __str__(self):
+    return "사용자: {}, 이메일: {}, 비밀번호: ******".format(self.name, self.email)
+# print 함수를 호출할 때 자동으로 불리는 역할
+
+user1 = User("Python", "python@gamil.com", "1234")
+print(user1)
+```
