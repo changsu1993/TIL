@@ -25,6 +25,10 @@
 
 ## JavaScript
 
+## OOP
+
+## Python
+
 ## React
 
 ## Web
