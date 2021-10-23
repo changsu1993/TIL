@@ -58,7 +58,7 @@ user1.say_hello()
 
 <br>
 
-### 특수 메소드 (magic method or special method)
+### 특수 메소드 (magic method or special method) <br>
 
 특정 상황에서 자동으로 호출되는 메소드(인스턴스가 생성될 때 자동으로 호출) <br>
 이름 앞 뒤로 언더바가 두 개씩 존재
@@ -93,3 +93,58 @@ class User:
 user1 = User("Python", "python@gamil.com", "1234")
 print(user1)
 ```
+
+<br>
+
+### 클래스 메소드 <br>
+
+클래스 변수의 값을 읽거나 설정하는 메소드 <br>
+
+```python
+class User:
+  count = 0
+
+  def __init__(self, name, email, password):
+    self.name = name
+    self.email = email
+    self.password = password
+
+    User.count += 1
+
+# double underscore (dunder 메소드)
+  def __str__(self):
+    return "사용자: {}, 이메일: {}, 비밀번호: ******".format(self.name, self.email)
+# print 함수를 호출할 때 자동으로 불리는 역할
+
+  @classmethod
+  def number_of_users(cls):
+    print("사용자 수{}".format(cls.count))
+# cls는 User 클래스를 나타낸다
+```
+
+**클래스 메소드의 규칙** <br>
+
+클래스 메소드는 메소드 위에 @classmethod(데코레이터)를 쓴다. <br>
+첫 번째 파라미터로 cls를 쓴다. (python의 약속)
+<br><br>
+
+**인스턴스 메소드와 클래스 메소드의 차이** <br>
+
+```python
+# 인스턴스 메소드
+User.say_hello(user1)
+user1.say_hello() # 인스턴스 자신이 첫 번째 파라미터로 자동 전달
+
+# 클래스 메소드
+User.number_of_users()
+user1.number_of_users()
+# 두 가지 방법 모두 첫 번째 파라미터로 클래스 자동 전달
+# 클래스가 자동 전달 되는 이유는 @classmethod 데코레이터로 number_of_users를 클래스 메소드로 만들어줬기 때문이다.
+```
+
+<br>
+
+**클래스 변수와 인스턴스 변수 둘 다 쓸 경우** <br>
+
+인스턴스 메소드는 인스턴스 변수와 클래스 변수 모두 사용 가능하다. (인스턴스 변수는 self를 통해, 클래스 변수는 클래스 이름에 .을 붙여서) <br>
+반면 클래스 메소드는 인스턴스 변수를 사용할 수 없다.
