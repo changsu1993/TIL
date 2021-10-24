@@ -96,7 +96,7 @@ print(user1)
 
 <br>
 
-### 클래스 메소드 <br>
+### 클래스 메소드 (class method) <br>
 
 클래스 변수의 값을 읽거나 설정하는 메소드 <br>
 
@@ -148,3 +148,21 @@ user1.number_of_users()
 
 인스턴스 메소드는 인스턴스 변수와 클래스 변수 모두 사용 가능하다. (인스턴스 변수는 self를 통해, 클래스 변수는 클래스 이름에 .을 붙여서) <br>
 반면 클래스 메소드는 인스턴스 변수를 사용할 수 없다.
+<br><br>
+
+### 정적 메소드 (static method) <br>
+
+인스턴스 변수, 클래스 변수를 전혀 다루지 않는 메소드이다. <br>
+인스턴스 변수나 클래스 변수 중 아무것도 사용하지 않을 메소드라면 정적 메소드로 만든다. <br> 즉, 어떤 속성을 다루지 않고, 단지 기능(행동)적인 역할만 하는 메소드를 정의할 때 정적 메소드로 정의한다.
+
+```python
+@staticmethod
+def is_valid_email(email_address):
+    return "@" in email_address
+
+print(User.is_valid_email("python"))
+print(User.is_valid_email("python@gmail.com"))
+
+print(user1.is_valid_email("javaScript"))
+print(user1.is_valid_email("javaScript@gmail.com"))
+```
