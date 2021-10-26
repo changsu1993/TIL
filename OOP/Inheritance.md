@@ -35,7 +35,7 @@ class DeliveryMan(Employee):
 
 help 함수를 실행할 경우 Method resolution order: 라는 부분에 해당 인스턴스의 클래스가 어떤 부모 클래스를 가지는지 보여준다. 이 결과를 다른 방법으로도 볼 수 있다. <br>
 
-**mro 메소드** <br>
+**mro (Method Resolution Order) 메소드** <br>
 
 ```python
 print(cashier.mro())
@@ -110,9 +110,21 @@ class Employee:
 # 오버라이딩
 class Cashier(Employee):
   raise_percentage = 1.05
+  burger_price = 4000
+
   def __init__(self, name, wage, number_sold):
     super().__init__(name, wage)
     self.number_sold = number_sold
+
+  def take_order(self, money_received):
+    """주문과 돈을 받고 거스름돈을 리턴한다."""
+    if Cashier.burger_price > money_received:
+      print("돈이 충분하지 않습니다. 돈을 다시 계산해서 주세요!")
+      return money_received
+    else:
+      self.number_sold += 1
+      change = money_received - Cashier.burger_price
+      return change
 
   def __str__(self):
     return Cashier.company_name + " 계산대 직원: " + self.name
@@ -123,4 +135,6 @@ class DeliveryMan(Employee):
 
 super 함수는 자식 클래스에서 부모 클래스의 메소드를 사용하고 싶을 때 쓰는 함수이다. <br>
 super 함수로 부모 클래스의 메소드를 사용할 때는 self 파라미터를 넘겨 줄 필요가 없다. (파이썬의 규칙) <br>
-변수를 오버라이딩 하려면 그냥 자식 클래스에도 똑같은 이름의 변수를 두고 다른 값을 넣으면 된다.
+변수를 오버라이딩 하려면 그냥 자식 클래스에도 똑같은 이름의 변수를 두고 다른 값을 넣으면 된다. <br>
+
+메소드 오버라이딩이 가능한 이유는 메소드 검색 순서(mro)가 자식 클래스 방향에서 부모 클래스 방향 순이기 때문이다.
