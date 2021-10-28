@@ -82,6 +82,69 @@ shape이 Rectangle 인스턴스 또는 Circle 인스턴스를 가리키는 것�
 
 <br><br>
 
+### 일반 상속 <br>
+
+```python
+from math import pi
+
+class Shape:
+    """도형 클래스"""
+    def area(self):
+        """도형의 넓이를 리턴한다: 자식 클래스가 오버라이딩할 것"""
+        pass
+
+    def perimeter(self):
+        """도형의 둘레를 리턴한다: 자식 클래스가 오버라이딩할 것"""
+        pass
+
+class Rectangle(Shape):
+    """직사각형 클래스"""
+    def __init__(self, width, height):
+        self.width = width
+        self.height = height
+
+    def area(self):
+        """직사각형의 넓이를 리턴한다"""
+        return self.width * self.height
+
+    def perimeter(self):
+        """직사각형의 둘레를 리턴한다"""
+        return 2 * self.width + 2 * self.height
+
+    def __str__(self):
+        """직사각형의 정보를 문자열로 리턴한다"""
+        return "밑변 {}, 높이 {}인 직사각형".format(self.width, self.height)
+
+
+class Circle(Shape):
+    """원 클래스"""
+    def __init__(self, radius):
+        self.radius = radius
+
+    def area(self):
+        """원의 넓이를 리턴한다"""
+        return pi * self.radius * self.radius
+
+    def perimeter(self):
+        """원의 둘레를 리턴한다"""
+        return 2 * pi * self.radius
+
+    def __str__(self):
+        """원의 정보를 문자열로 리턴한다"""
+        return "반지름 {}인 원".format(self.radius)
+
+class Paint:
+
+    def add_shape(self, shape):
+        """그림판에 도형을 추가한다"""
+        if isinstance(shape, Shape):
+            self.shapes.append(shape)
+        else:
+            print("넓이, 둘레를 구하는 메소드가 없는 도형은 추가할 수 없습니다.")
+```
+
+<br><br>
+
 ### 추상클래스 <br>
 
 여러 클래스들의 공통점을 추상화해서 모아놓은 클래스
@@ -113,3 +176,36 @@ ABC 클래스를 상속받으면 추상 클래스로 만들 수 있다. <br>
 
 정리해보자면 추상 클래스는 ABC 클래스를 상속받고 적어도 하나 이상의 추상 메소드를 가져야 한다. <br>
 추상 클래스는 인스턴스를 직접 생성하려고 쓰는 클래스가 아닌 여러 클래스들의 공통점을 담아두고 다른 클래스들이 상속받는 부모 클래스가 될 목적으로 존재하기 때문에 추상 클래스로는 인스턴스를 만들 수 없다.
+<br><br>
+
+```python
+from math import pi, sqrt
+from abc import ABC, abstractmethod
+# 대문자 ABC는 Abstract Base Class 줄임말 (추상화 기초 클래스)
+
+class Shape(ABC):
+  """도형 클래스"""
+  @abstractmethod
+  def area(self) -> float:
+    """도형의 넓이를 리턴한다: 자식 클래스가 오버라이딩할 것"""
+    pass
+
+  @abstractmethod
+  def perimeter(self) -> float:
+    """도형의 둘레를 리턴한다: 자식 클래스가 오버라이딩할 것"""
+    pass
+
+class EquilateralTriangle(Shape):
+    """정삼각형 클래스"""
+    def __init(self, side):
+        self.side = side
+
+    def area(self):
+    """정삼각형의 넓이를 리턴한다"""
+    return sqrt(3) * self.side * self.side / 4
+
+    def perimeter(self):
+    """정삼각형의 둘레를 리턴한다"""
+    return 3 * self.side
+# Shape을 상속받는 클래스는 반드시 area 메소드와 perimeter 메소드를 오버라이딩 해야 한다.
+```
