@@ -5,3 +5,64 @@
 각 노드는 하나의 객체로 표현된다. 노드 객체 안에는 data 속성과 next 속성 두 가지가 존재한다. <br>
 data 속성에는 저장하고 싶은 정보를 넣고 next 속성에는 다음 노드에 대한 래퍼런스를 넣는다. <br>
 노드 객체들은 메모리에 연속적으로 저장된 게 아닌 메모리 여기 저기에 흩어져 저장되어 있지만 각 노드는 next 속성에 다음 노드에 대한 래퍼런스가 있기 때문에 정보를 원하는 순서로 저장할 수 있다. <br> 링크드 리스트의 시작점 역할을 하는 첫 번째 노드 객체를 head 노드라 한다.
+
+```python
+class Node:
+    """링크드 리스트의 노드 클래스"""
+
+    def __init__(self, data):
+        self.data = data  # 노드가 저장하는 데이터
+        self.next = None  # 다음 노드에 대한 레퍼런스
+
+
+# 데이터 2, 3, 5, 7, 11을 담는 노드들 생성
+head_node = Node(2)
+node_1 = Node(3)
+node_2 = Node(5)
+node_3 = Node(7)
+tail_node = Node(11)
+
+# 노드들을 연결
+head_node.next = node_1
+node_1.next = node_2
+node_2.next = node_3
+node_3.next = tail_node
+
+# 노드 순서대로 출력
+iterator = head_node
+
+while iterator is not None:
+    print(iterator.data)
+    iterator = iterator.next
+```
+
+<br><br>
+
+```python
+class Node:
+    """링크드 리스트의 노드 클래스"""
+
+    def __init__(self, data):
+        self.data = data  # 노드가 저장하는 데이터
+        self.next = None  # 다음 노드에 대한 레퍼런스
+
+
+class LinkedList:
+    """링크드 리스트 클래스"""
+
+    def __init__(self):
+        self.head = None
+        self.tail = None
+
+    def append(self, data):
+        """링크드 리스트 추가 연산 메소드"""
+        new_Node = Node(data)
+
+        if self.head is None:  # 링크드 리스트가 비어 있는 경우
+            self.head = new_node
+            self.tail = new_node
+        else:  # 링크드 리스트가 비어 있지 않은 경우
+            self.tail.next = new_node
+            self.tail = new_node
+
+```
