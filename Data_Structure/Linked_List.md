@@ -58,6 +58,32 @@ class LinkedList:
         self.head = None
         self.tail = None
 
+    def pop_left(self):
+        """링크드 리스트의 가장 앞 노드 삭제 메소드. 단, 링크드 리스트에 항상 노드가 있다고 가정한다"""
+        data = self.head.data
+
+        if self.head is self.tail:
+            self.head = None
+            self.tail = None
+        else:
+            self.head = self.head.next
+
+        return data
+
+    def delete_after(self, previous_node):
+        """링크드 리스트 삭제연산. 주어진 노드 뒤 노드를 삭제한다"""
+        data = previous_node.next.data
+
+        # 지우려는 노드가 tail 노드일 때:
+        if previous_node.next is self.tail:
+            previous_node.next = None
+            self.tail = previous_node
+        # 두 노드 사이 노드를 지울 때:
+        else:
+            previous_node.next = previous_node.next.next
+
+        return data
+
     def insert_after(self, previous_node, data):
         """링크드 리스트 주어진 노드 뒤 삽입 연산 메소드"""
         new_node = Node(data)
@@ -102,4 +128,33 @@ class LinkedList:
 # 실행되는데 걸리는 시간이 n에 비례하기 때문에 접근 연산의 시간 복잡도는 최악의 경우 O(n)이다.
 ```
 
-<br>
+<br><br>
+
+## 링크드 리스트 연산들 시간 복잡도
+
+### 접근
+
+인덱스 x에 있는 데이터에 접근하려면 링크드 리스트의 head 노드부터 x번 다음 노드를 찾아서 가야 한다. <br>
+즉, 원하는 노드에 접근하는 시간은 몇 번째 인덱스인지에 비례한다. <br>
+링크드 리스트 안에 있는 노드의 수를 n이라고 하면, 마지막 순서에 있는 노드에 접근해야 되는 최악의 경우에는 head 노드에서 총 n-1번 다음 노드로 가야 된다. 걸리는 시간은 n에 비례하기 때문에 접근 연산은 최악의 경우 O(n)의 시간 복잡도를 갖는다.
+<br><br>
+
+### 탐색
+
+링크드 리스트 탐색 연산은 배열을 탐색할 때와 같은 방법으로 한다. <br>
+가장 앞 노드부터 다음 노드를 하나씩 보면서 원하는 데이터를 찾는다. <br>
+접근과 마찬가지로 링크드 리스트 안에 찾는 데이터가 없을 때 또는 찾으려는 데이터가 마지막 노드에 있는 최악의 경우, n개의 노드를 모두 다 봐야한다. 그렇기 때문에 탐색도 접근과 마찬가지로 최악의 경우 O(n)의 시간 복잡도를 갖는다.
+<br><br>
+
+### 삽입/삭제
+
+삽입, 삭제는 그냥 삽입, 삭제할 인덱스의 주변 노드들에 연결된 레퍼런스만 수정한다. <br>
+즉, 실행되는데 걸리는 시간은 특정 값에 비례하지 않고 항상 일정하다. <br>
+파라미터로 받는 이 노드가 어떤 순서에 있든 노드든 상관없이 걸리는 시간은 변하지 않는다. <br>
+O(1)의 시간 복잡도를 갖는다 할 수 있다. <br>
+
+가장 앞에 접근 + 삽입 = O(1+1) <br>
+가장 앞에 접근 + 삭제 = O(1+1) <br>
+가장 뒤에 접근 + 삽입 = O(1+1) <br>
+원하는 노드에 접근 또는 탐색 + 삽입 or 삭제 = O(n+1)
+<br><br>
