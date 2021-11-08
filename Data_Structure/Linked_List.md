@@ -180,6 +180,23 @@ class LinkedList:
         self.head = None
         self.tail = None
 
+    def delete(self, node_to_delete):
+        """더블리 링크드 리스트 삭제 연산 메소드"""
+        if node_to_delete is self.head and node_to_delete is self.tail:
+            self.head = None
+            self.tail = None
+        elif node_to_delete is self.head:
+            self.head = self.head.next
+            self.head.prev = None
+        elif node_to_delete is self.tail:
+            self.tail = self.tail.prev
+            self.tail.next = None
+        else:
+            node_to_delete.prev.next = node_to_delete.next
+            node_to_delete.next.prev = node_to_delete.prev
+
+        return node_to_delete.data
+
     def append(self, data):
         """링크드 리스트 추가 연산 메소드"""
         new_node = Node(data)  # 새로운 데이터를 저장하는 노드
@@ -195,7 +212,6 @@ class LinkedList:
 
     def prepend(self, data):
         """링크드 리스트 가장 앞에 데이터를 추가시켜주는 메소드"""
-        # 코드를 쓰세요
         new_node = Node(data)
 
         if self.head is None:
@@ -208,7 +224,6 @@ class LinkedList:
 
     def insert_after(self, previous_node, data):
         """링크드 리스트 추가 연산 메소드"""
-        # 코드를 쓰세요
         new_node = Node(data)
 
         if previous_node is self.tail:
@@ -260,3 +275,33 @@ class LinkedList:
 
         return res_str
 ```
+
+<br><br>
+
+## 더블리 링크드 리스트 연산 & 시간 복잡도
+
+### 접근 & 탐색 연산
+
+링크드 리스트의 길이가 n이라고 할 때, 최악의 경우, 걸리는 시간은 이 n에 비례하므로 접근과 탐색은 O(n)이 걸린다.
+<br><br>
+
+### 삽입 & 삭제 연산
+
+링크드 리스트의 길이와 상관없이 항상 일정하게 노드를 삽입할 수 있다. O(1)
+<br><br>
+
+### 현실적인 시간 복잡도
+
+접근 = O(n) <br>
+탐색 = O(n) <br>
+원하는 노드에 접근 또는 탐색 + 삽입 = O(n+1) <br>
+원하는 노드에 접근 또는 탐색 + 삭제 = O(n+1)
+<br><br>
+
+### 삽입 & 삭제 연산 특수 경우
+
+링크드 리스트는 head와 tail 노드를 변수로 갖고 있어서 바로 접근할 수 있다. <br>
+이 특성을 이용하면 링크드 리스트의 가장 앞과 뒤에 삽입이나 삭제 연산을 할 때 좀 더 효율적으로 할 수 있다. <br>
+더블리 링크드의 delete 메소드에 파라미터로 head나 tail 노드를 가지고와서 넘겨주면 양 끝 데이터를 한번에 O(1)으로 삭제할 수 있다. <br>
+
+가장 앞에 접근 + 삽입 = O(1+1) <br>
