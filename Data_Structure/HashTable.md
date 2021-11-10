@@ -70,3 +70,161 @@ a와 key를 곱한 값의 정수 부분을 버리면 그 결과 값은 0.xxxx �
 즉, 해시 테이블은 고정된 크기의 배열을 만들고 <br>
 해시 함수를 이용해서 key를 원하는 범위의 자연수로 바꿔준 후 <br>
 해시 함수 결과 값 인덱스에 key - value 쌍을 저장하는 자료 구조이다.
+
+<br>
+
+### 파이썬 hash 함수 <br>
+
+파이썬 언어도 내부적으로 hash라는 함수를 제공한다. 파이썬 해시 함수는 파라미터로 받은 값을 그냥 아무 정수로만 바꿔주는 함수이다.
+
+```python
+# 정수 값
+print(hash(12345))  # 12345
+print(hash(12345))  # 12345
+
+# 다른 정수 값
+print(hash(12346))  # 12346
+
+# 소수 값
+print(hash(15.1234))  # 284541027336970255
+print(hash(15.1234))  # 284541027336970255
+
+# 다른 소수 값
+print(hash(81.1234))  # 284541027336978513
+
+# 문자열
+print(hash("파이썬"))  # -8002119629611903017
+print(hash("파이썬"))  # -8002119629611903017
+
+# 다른 문자열
+print(hash("자바"))  # -8553573703343279427
+```
+
+이런식으로 같은 값을 넣으면 항상 같은 정수를 리턴해주는 함수이다. 이 때 중요한 점은 hash 함수에 서로 다른 두 값을 파라미터로 넣었을 때 같은 정수가 리턴될 수 없다는 것이다. 데이터를 자신만의 고유한 정수 값으로 바꿔주는 함수다.
+
+파이썬 hash 함수는 언어 자체적으로는 불변 타입 자료형에만 사용할 수 있다. <br>
+(불린형, 정수형, 소수형, 튜플, 문자열)
+<br><br>
+
+### 해시 테이블 충돌과 Chaining 개념 <br>
+
+**배열 인덱스에 링크드 리스트 저장해서 충돌 해결** <br>
+
+```python
+class Node:
+    """링크드 리스트의 노드 클래스"""
+    def __init__(self, key, value):
+        self.key = key
+        self.value = value
+        self.next = None  # 다음 노드에 대한 레퍼런스
+        self.prev = None  # 전 노드에 대한 레퍼런스
+
+class LinkedList:
+    """링크드 리스트 클래스"""
+    def __init__(self):
+        self.head = None  # 링크드 리스트의 가장 앞 노드
+        self.tail = None  # 링크드 리스트의 가장 뒤 노드
+
+    # 탐색 메소드
+    def find_node_with_key(self, key):
+    """링크드 리스트에서 주어진 데이터를 갖고있는 노드를 리턴한다. 단, 해당 노드가 없으면 None을 리턴한다"""
+    iterator = self.head   # 링크드 리스트를 돌기 위해 필요한 노드 변수
+
+    while iterator is not None:
+        if iterator.key == key:
+            return iterator
+
+        iterator = iterator.next
+
+    return None
+
+    # 추가 (맨 뒤 삽입) 메소드
+    def append(self, key, value):
+    """링크드 리스트 추가 연산 메소드"""
+    new_node = Node(key, value)
+
+    # 빈 링크드 리스트라면 head와 tail을 새로 만든 노드로 지정
+    if self.head is None:
+        self.head = new_node
+        self.tail = new_node
+    # 이미 노드가 있으면
+    else:
+        self.tail.next = new_node  # tail의 다음 노드로 추가
+        new_node.prev = self.tail
+        self.tail = new_node  # tail 업데이트
+
+    # 삭제 메소드
+    def delete(self, node_to_delete):
+    """더블리 링크드 리스트 삭제 연산 메소드"""
+
+    # 링크드 리스트에서 마지막 남은 데이터를 삭제할 때
+    if node_to_delete is self.head and node_to_delete is self.tail:
+        self.tail = None
+        self.head = None
+
+    # 링크드 리스트 가장 앞 데이터 삭제할 때
+    elif node_to_delete is self.head:
+        self.head = self.head.next
+        self.head.prev = None
+
+    # 링크드 리스트 가장 뒤 데이터 삭제할 떄
+    elif node_to_delete is self.tail:
+        self.tail = self.tail.prev
+        self.tail.next = None
+
+    # 두 노드 사이에 있는 데이터 삭제할 때
+    else:
+        node_to_delete.prev.next = node_to_delete.next
+        node_to_delete.next.prev = node_to_delete.prev
+
+    # 문자열 메소드
+    def __str__(self):
+    """링크드 리스트를 문자열로 표현해서 리턴하는 메소드"""
+    res_str = ""
+
+    # 링크드 리스트 안에 모든 노드를 돌기 위한 변수. 일단 가장 앞 노드로 정의한다.
+    iterator = self.head
+
+    # 링크드 리스트 끝까지 돈다
+    while iterator is not None:
+        # 각 노드의 데이터를 리턴하는 문자열에 더해준다
+        res_str += "{}: {}\n".format(iterator.key, iterator.value)
+        iterator = iterator.next # 다음 노드로 넘어간다
+
+    return res_str
+```
+
+<br>
+
+### Chaining을 쓰는 해시 테이블 연산
+
+<br>
+
+**탐색 연산**
+
+원하는 key에 해당하는 value를 찾는 연산
+
+**탐색 연산 시간 복잡도** <br>
+
+|                    | 탐색 연산 각 단계들 |
+| ------------------ | ------------------- |
+| 해시 함수 계산     | O(1)                |
+| 배열 인덱스 접근   | O(1)                |
+| 링크드 리스트 탐색 | O(n)                |
+| 총합               | O(n)                |
+
+<br>
+
+**삭제 연산**
+
+특정 key가 주어졌을 때 해시 테이블에서 그 키에 해당하는 key - value 데이터 쌍을 삭제한다.
+
+**삭제 시간 복잡도** <br>
+
+|                         | 탐색 연산 각 단계들 |
+| ----------------------- | ------------------- |
+| 해시 함수 계산          | O(1)                |
+| 배열 인덱스 접근        | O(1)                |
+| 링크드 리스트 노드 탐색 | O(n)                |
+| 링크드 리스트 노드 삭제 | O(1)                |
+| 총합                    | O(n)                |
