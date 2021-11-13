@@ -120,6 +120,7 @@ print(trending)
 ```python
 # deque
 # Doubly-ended-queue의 약자
+# 더블리 링크드 리스트를 사용하기에 맨 앞 삭제, 맨 뒤 삽입, 맨 앞 접근은 O(1)이다.
 # 맨 앞과 뒤에 데이터를 삽입하고 삭제할 수 있게 해주는 자료형
 # deque는 파이썬 collections 모듈에서 가지고 온다.
 from collections import deque
@@ -156,3 +157,130 @@ print(queue.popleft())
 | 맨 앞 삭제 | O(n)           | O(1)                 |
 | 맨 뒤 삽입 | 분할 상환 O(1) | O(1)                 |
 | 맨 앞 접근 | O(1)           | O(1)                 |
+
+<br><br>
+
+**스택(stack) 개념**
+
+데이터 간 순서를 약속하는 추상 자료형이다. 스택은 영어로 어떤 물건이 차곡차곡 쌓여 있는 걸 말한다. <br>
+데이터를 맨 끝에 추가하고 삭제할 때도 맨 끝에 데이터를 삭제하는 연산을 약속하는 추상 자료형이다. (LIFO: LAST-In-First-Out)<br>
+
+- 데이터 간 순서 관계를 유지할 수 있다.
+- 맨 뒤 데이터 추가
+- 맨 뒤 데이터 삭제
+- 맨 뒤 데이터 접근
+
+```python
+# deque
+# Doubly-ended-queue의 약자
+# 맨 앞과 뒤에 데이터를 삽입하고 삭제할 수 있게 해주는 자료형
+from collections import deque
+
+stack = deque()
+
+# 스택 맨 끝에 데이터 추가
+stack.append("a")
+stack.append("b")
+stack.append("c")
+stack.append("d")
+stack.append("e")
+
+print(stack)  # 스택 출력
+
+# 스택 맨 끝 데이터 접근
+print(stack[-1])
+
+# 맨 끝 데이터 삭제
+print(stack.pop())
+print(stack.pop())
+print(stack.pop())
+
+print(stack)  # 스택 출력
+```
+
+<br><br>
+
+**스택 구현**
+
+스택은 동적 배열과 링크드 리스트로 구현할 수 있다. <br>
+| | 동적 배열 | 더블리 링크드 리스트 |
+| ---------- | -------------- | -------------------- |
+| 맨 뒤 삭제 | 분할 상환 O(1) | O(1) |
+| 맨 뒤 삽입 | 분할 상환 O(1) | O(1) |
+| 맨 뒤 접근 | O(1) | O(1) |
+
+<br><br>
+
+**딕셔너리(Dictionary) 개념**
+
+저장하는 데이터의 순서 관계를 약속하지 않는다.
+
+- 데이터 간 순서 관계를 약속하지 않음
+- key - value 데이터 쌍 삽입
+- key를 이용한 데이터 탐색
+- key를 이용한 데이터 삭제
+
+```python
+grades = {}
+
+# key - value 데이터 삽입
+grades["AA"] = 80
+grades["BB"] = 70
+grades["CC"] = 90
+grades["DD"] = 60
+grades["EE"] = 50
+
+print(grades)  # 딕셔너리 출력
+
+# key를 이용해서 value 탐색
+print(grades["AA"])
+print(grades["BB"])
+
+# key를 이용한 삭제
+grades.pop("AA")
+grades.pop("BB")
+```
+
+<br>
+
+|                   | 해시 테이블 |
+| ----------------- | ----------- |
+| key-value 쌍 삽입 | O(1)        |
+| key를 이용한 탐색 | O(1)        |
+| key를 이용한 삭제 | O(1)        |
+
+<br><br>
+
+**세트(Set) 개념**
+
+- 데이터 간 순서 관계를 약속하지 않음
+- 삽입: 데이터를 저장할 수 있다. (중복 데이터 X)
+- 탐색: 데이터가 저장됐는지 확인할 수 있다.
+- 삭제: 저장한 데이터를 지울 수 있다.
+
+```python
+finished_classes = set()
+
+# 데이터 저장
+finished_classes.add("프로그래밍")
+finished_classes.add("알고리즘")
+finished_classes.add("자료 구조")
+
+print(finished_classes) # 세트 출력
+
+# 데이터 탐색
+print("프로그래밍" in finished_classes)
+print("알고리즘" in finished_classes)
+
+# 데이터 삭제
+finished_classes.remove("프로그래밍")
+finished_classes.remove("알고리즘")
+```
+
+<br>
+
+|      | 해시 테이블 |
+| ---- | ----------- |
+| 삽입 | O(1)        |
+| 탐색 | O(1)        |
+| 삭제 | O(1)        |
