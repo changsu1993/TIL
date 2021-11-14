@@ -166,3 +166,96 @@ complete_binary_tree = [None, 1, 5, 12, 11, 9, 10, 14, 2, 10]
 - 마지막 레벨은 왼쪽에서 오른쪽 방향으로 노드들로 가득 차 있어야 함(오른쪽은 비어있어도 되지만 왼쪽은 비어있으면 안 됨)
 
 때문에 이렇게 각 노드를 리스트에 저장한 후에도 부모 노드와 자식 노드를 손쉽게 찾을 수 있다.
+
+<br><br>
+
+### 트리 순회
+
+자료 구조에 저장된 데이터를 하나씩 다 도는 걸 순회라고 한다. <br>
+트리를 순회할 때는 재귀 함수를 주로 사용한다.
+
+```python
+# 정의
+def traverse(node):
+    """트리를 순회하면서 출력하는 함수"""
+
+# 호출
+traverse(root_node)
+```
+
+<br>
+
+**트리 순회의 기본 동작들**
+
+1. 재귀적으로 왼쪽 부분 트리 순회
+
+전체 노드 대신 루트 노드 왼쪽에 있는 부분 트리를 순회한다. <br>
+
+```python
+traverse(root_node.left_child)
+# 재귀적
+def traverse(node):
+    ...
+    traverse(node.left_child)
+    ...
+```
+
+2. 재귀적으로 오른쪽 부분 트리 순회
+
+```python
+traverse(root_node.right_child)
+# 재귀적
+def traverse(node):
+    ...
+    traverse(node.right_child)
+    ...
+```
+
+3. 현재 노드 데이터를 출력한다.
+
+```python
+def traverse(node):
+    ...
+    print(node.data)
+    ...
+```
+
+<br><br>
+
+**pre-order 순회**
+
+- 현재 노드 데이터를 출력한다
+- 재귀적으로 왼쪽 부분 트리 순회
+- 재귀적으로 오른쪽 부분 트리 순회
+
+pre-order는 두 개의 부분 트리를 순회하기 전에 노드의 데이터를 출력하는 방법이다.
+
+<img src="img/06_Tree.png" alt="pre-order" />
+
+<br><br>
+
+**post-order 순회**
+
+- 재귀적으로 왼쪽 부분 트리 순회
+- 재귀적으로 오른쪽 부분 트리 순회
+- 현재 노드 데이터를 출력한다
+
+post-order는 두 개의 부분 트리들을 순회한 후에 노드의 데이터를 출력하는 방법이다.
+
+<img src="img/07_Tree.png" alt="post-order" />
+
+<br><br>
+
+**in-order 순회**
+
+- 재귀적으로 왼쪽 부분 트리 순회
+- 현재 노드 데이터를 출력한다
+- 재귀적으로 오른쪽 부분 트리 순회
+
+in-order는 데이터를 출력하는 동작이 두 개의 부분 트리들을 순회하는 동작들 사이에 껴있는 순회 방법이다.
+
+<img src="img/08_Tree.png" alt="in-order" />
+
+<br><br>
+
+데이터 간 계층적 관계를 저장하는 트리도 순회를 하면 데이터 사이에 앞과 뒤라는 선형적인 순서를 만들 수 있다.
