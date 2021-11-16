@@ -108,3 +108,213 @@ log(n) x n = n log(n) 이므로 힙을 만드는 데 걸리는 시간 복잡도�
 - 힙의 마지막 인덱스에 데이터를 삽입한다.
 - 삽입한 데이터와 부모 노드의 데이터를 비교한다.
 - 부모 노드의 데이터가 더 작으면 둘의 위치를 바꿔준다.
+
+```python
+def swap(tree, index_1, index_2):
+    """완전 이진 트리의 노드 index_1과 노드 index_2의 위치를 바꿔준다"""
+    temp = tree[index_1]
+    tree[index_1] = tree[index_2]
+    tree[index_2] = temp
+
+
+def reverse_heapify(tree, index):
+    """삽입된 노드를 힙 속성을 지키는 위치로 이동시키는 함수"""
+    parent_index = index // 2  # 삽입된 노드의 부모 노드의 인덱스 계산
+    # 코드를 쓰세요.
+    if 0 < parent_index < len(tree) and tree[parent_index] < tree[index]:
+        swap(tree, index, parent_index)
+        reverse_heapify(tree, parent_index)
+
+class PriorityQueue:
+    """힙으로 구현한 우선순위 큐"""
+    def __init__(self):
+        self.heap = [None]  # 파이썬 리스트로 구현한 힙
+
+
+    def insert(self, data):
+        """삽입 메소드"""
+        # 코드를 쓰세요
+        self.heap.append(data)
+        reverse_heapify(self.heap, len(self.heap)-1)
+
+    def __str__(self):
+        return str(self.heap)
+
+
+# 실행 코드
+priority_queue = PriorityQueue()
+
+priority_queue.insert(6)
+priority_queue.insert(9)
+priority_queue.insert(1)
+priority_queue.insert(3)
+priority_queue.insert(10)
+priority_queue.insert(11)
+priority_queue.insert(13)
+
+print(priority_queue)
+```
+
+<br>
+
+**힙에서 최고 우선순위 데이터 추출하기**
+
+- root 노드와 마지막 노드를 서로 바꿔준다.
+- 마지막 노드의 데이터를 변수에 저장해 준다.
+- 마지막 노드를 삭제한다.
+- root 노드에 heapify를 호출해서 망가진 힙 속성을 고친다.
+- 변수에 저장한 데이터를 리턴한다. (최고 우선순위 데이터)
+
+```python
+from heapify_code import *
+
+class PriorityQueue:
+    """힙으로 구현한 우선순위 큐"""
+    def __init__(self):
+        self.heap = [None]  # 파이썬 리스트로 구현한 힙
+
+    def insert(self, data):
+        """삽입 메소드"""
+        self.heap.append(data)  # 힙의 마지막에 데이터 추가
+        reverse_heapify(self.heap, len(self.heap)-1) # 삽입된 노드(추가된 데이터)의 위치를 재배치
+
+    def extract_max(self):
+        """최우선순위 데이터 추출 메소드"""
+        # 코드를 쓰세요
+        swap(self.heap, 1, len(self.heap)-1)
+        max_value = self.heap.pop()
+        heapify(self.heap, 1, len(self.heap))
+        return max_value
+
+
+    def __str__(self):
+        return str(self.heap)
+
+# 출력 코드
+priority_queue = PriorityQueue()
+
+priority_queue.insert(6)
+priority_queue.insert(9)
+priority_queue.insert(1)
+priority_queue.insert(3)
+priority_queue.insert(10)
+priority_queue.insert(11)
+priority_queue.insert(13)
+
+print(priority_queue.extract_max())
+print(priority_queue.extract_max())
+print(priority_queue.extract_max())
+print(priority_queue.extract_max())
+print(priority_queue.extract_max())
+print(priority_queue.extract_max())
+print(priority_queue.extract_max())
+```
+
+<br>
+
+**힙의 삽입 연산 시간 복잡도**
+
+힙 안에 총 n개의 노드가 있다고 가정하고 데이터 삽입의 3단계 <br>
+
+1. 힙의 마지막 인덱스에 노드를 삽입한다.
+2. (1) 삽입한 노드와 그 부모 노드를 비교해서 부모 노드가 더 작다면 둘의 위치를 바꾼다. <br> (2) 삽입한 노드와 그 부모 노드를 비교해서 부모 노드가 더 크면 그대로 둔다.
+3. 2-1의 경우에는 삽입한 노드가 올바른 위치를 찾을 때까지 단계 2를 반복한다.
+
+<br>
+
+1단계
+
+먼저 힙의 마지막에 노드를 삽입해야 한다. 동적 배열에 원소를 추가하는 것의 시간 복잡도를 분할 상환 분석하면 O(1)이다.
+
+2단계
+
+(1) 삽입된 노드의 값과 부모 노드의 값을 비교하는 건 O(1)이 걸린다. <br>
+(2) 삽입된 데이터가 더 큰 경우 부모 노드와의 위치를 바꿔주는 것도 마찬가지로 O(1)이 걸린다.
+
+3단계
+
+최악의 경우는 삽입한 데이터가 leaf 노드부터 시작해서 root 노드까지 올라가는 경우이다. <br>
+그럼 힙의 높이만큼 2단계를 반복해야 한다. 힙의 높이는 log(n)에 비례하므로 시간은 O(log(n))이다.<br>
+
+- 1단계의 O(1)
+- 2단계, 3단계의 O(log(n))
+
+더하면 O(1+log(n)), 결국 시간 복잡도는 O(log(n))이 걸린다.
+
+<br>
+
+**힙의 추출 연산 시간 복잡도**
+
+힙에 있는 노드의 개수를 n이라고 가정하고 4단계 <br>
+
+1. root 노드와 마지막 노드의 위치를 바꾼다.
+2. 마지막 위치로 간 원래 root 노드의 데이터를 별도 변수에 저장하고, 노드는 힙에서 지운다.
+3. 새로운 root 노드를 대상으로 heapify해서 망가진 힙 속성을 복원한다.
+4. 2단계에서 따로 저장해 둔 최우선순위 데이터를 리턴한다.
+
+<br>
+
+1단계
+
+root 노드와 마지막 노드의 위치를 바꾸는 건 노드의 개수랑은 전혀 상관없이 O(1)이 걸린다.
+
+2단계
+
+데이터를 변수에 지정하는 건 O(1)이 걸린다. 동적 배열에서 마지막 인덱스의 원소를 삭제하는 건 분할 상환 분석을 하면 O(1)이 걸린다. O(1+1)은 O(1)
+
+3단계
+
+새로운 root 노드를 대상으로 heapify를 호출해서 망가진 힙 속성을 복원하는 단계이다. O(log(n))
+
+4단계
+
+변수를 리턴하는 건 한 번에 할 수 있다. O(1) <br>
+총 걸리는 시간을 더하면 O(1+1+log(n)+1) <br>
+힙에서 가장 우선 순위가 높은 데이터를 추출하는 연산의 시간 복잡도는 O(log(n))이다.
+
+<br>
+
+**힙으로 구현한 우선순위 큐 평가**
+
+우선순위 큐를 구현할 때는 힙 말고도 다른 자료 구조들을 활용할 수도 있다.
+
+- 정렬된 동적 배열
+- 정렬된 더블리 링크드 리스트
+
+<br>
+
+**정렬된 동적 배열**
+
+데이터를 삽입하거나 추출해도 동적 배열이 늘 정렬된 상태를 유지하게 하면 된다. <br>
+동적 배열에 데이터가 정렬된 채(오름차순 또는 내림차순)로 있다고 가정하고 새로운 데이터를 삽입한다면 크게 두 가지 작업을 해야한다. <br>
+(1) 먼저 새로운 데이터가 어느 위치에 들어가야 하는지를 찾고
+(2) 그 위치에 데이터를 넣어야 한다.
+
+- 삽입할 위치를 찾는 것은 이진 탐색을 사용하면 O(log(n))이 걸린다.
+- 그리고 그 위치에 데이터를 삽입하는 건 최악의 경우 O(n)이 걸린다.
+
+그럼 삽입 연산은 총 O(log(n)+n)이 걸리고 결국, 정렬된 동적 배열에 데이터를 삽입하는 연산은 O(n)이 걸린다. <br>
+정렬된 동적 배열에서 가장 우선순위가 높은 데이터를 추출하는 연산은 O(1)이 걸린다.
+
+<br>
+
+**정렬된 더블리 링크드 리스트**
+
+링크드 리스트에서는 데이터를 삽입해야 하는 위치를 찾을 때 선형 탐색을 해야 한다. <br>
+총 노드 수가 n이라고 했을 때, 최악의 경우 n개의 노드를 다 봐야 한다. <br>
+삽입할 위치를 찾는 단계는 O(n)이 걸리고 삽입과 추출은 O(1)이 걸린다.
+
+<br>
+
+|                             | 데이터 삽입 | 데이터 추출 |
+| --------------------------- | ----------- | ----------- |
+| 정렬된 동적 배열            | O(n)        | O(1)        |
+| 정렬된 더블리 링크드 리스트 | O(n)        | O(1)        |
+| 힙                          | O(log(n))   | O(log(n)))  |
+
+<br>
+
+우선순위를 사용할 때
+
+- 정렬된 동적 배열이나 정렬된 더블리 링크드 리스트를 사용하면 데이터를 추출할 때 더 효율적
+- 힙을 사용하면 데이터를 삽입할 때 더 효율적
