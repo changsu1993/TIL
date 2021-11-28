@@ -266,3 +266,252 @@ print(seocho_station in gangnam_station.adjacent_stations)
 - Depth First Search
 
 두 종류로 나뉜다.
+
+<br>
+
+### Breadth First Search(BFS)
+
+<br>
+
+그래프를 너비 우선적으로 탐색한다.
+
+<br>
+
+**알고리즘**
+
+- 시작 노드를 방문 표시 후, 큐에 넣는다
+- 큐에 아무 노드가 없을 때까지:
+  - 큐 가장 앞 노드를 꺼낸다
+  - 꺼낸 노드에 인접한 노드들을 모두 보면서:
+    - 처음 방문한 노드면:
+      - 방문한 노드 표시를 해준다
+      - 큐에 넣어준다
+
+```python
+class StationNode:
+    """지하철 역을 나타내는 역"""
+    def __init__(self, station_name):
+        self.station_name = station_name
+        self.adjacent_stations = []
+        self.visited = False
+
+    def add_connection(self, station):
+        """파라미터로 받은 역과 엣지를 만들어주는 메소드"""
+        self.adjacent_stations.append(station)
+        station.adjacent_stations.append(self)
+
+
+def create_station_graph(input_file):
+    stations = {}
+
+    # 일반 텍스트 파일을 여는 코드
+    with open(input_file) as stations_raw_file:
+        for line in stations_raw_file:  # 파일을 한 줄씩 받아온다
+            previous_station = None  # 엣지를 저장하기 위한 변수
+            raw_data = line.strip().split("-")
+
+            for name in raw_data:
+                station_name = name.strip()
+
+                if station_name not in stations:
+                    current_station = StationNode(station_name)
+                    stations[station_name] = current_station
+
+                else:
+                    current_station = stations[station_name]
+
+                if previous_station is not None:
+                    current_station.add_connection(previous_station)
+
+                previous_station = current_station
+
+    return stations
+```
+
+```python
+from collections import deque
+from subway_graph import create_station_graph
+
+def bfs(graph, start_node):
+    """시작 노드에서 bfs를 실행하는 함수"""
+    queue = deque()  # 빈 큐 생성
+
+    # 일단 모든 노드를 방문하지 않은 노드로 표시
+    for station_node in graph.values():
+        station_node.visited = False
+
+    # 시작점 노드를 방문 표시한 후 큐에 넣어준다.
+    start_node.visited = True
+    queue.append(start_node)
+
+    while queue:  # 큐에 노드가 있는 동안
+        current_station = queue.popleft()  # 큐의 가장 앞 데이터를 갖고 온다
+        for neighbor in current_station.adjacent_stations:  # 인접한 노드를 돌면서
+            if not neighbor.visited:  # 방문하지 않은 노드면
+                neighbor.visited = True  # 방문 표시를 하고
+                queue.append(neighbor)  # 큐에 넣는다
+
+
+stations = create_station_graph("./new_stations.txt")  # stations.txt 파일로 그래프를 만든다
+
+gangnam_station = stations["강남"]
+
+# 강남역과 경로를 통해 연결된 모든 노드를 탐색
+bfs(stations, gangnam_station)
+
+# 강남역과 서울 지하철 역들이 연결됐는지 확인
+print(stations["강동구청"].visited)
+print(stations["평촌"].visited)
+print(stations["송도"].visited)
+print(stations["개화산"].visited)
+
+# 강남역과 대전 지하철 역들이 연결됐는지 확인
+print(stations["반석"].visited)
+print(stations["지족"].visited)
+print(stations["노은"].visited)
+print(stations["(대전)신흥"].visited)
+```
+
+<br><br>
+
+### BFS 알고리즘 시간 복잡도
+
+<br>
+
+총 노드의 수를 V, 엣지의 수를 E
+
+<br>
+
+**BFS 노드 전처리**
+
+모든 노드를 다 돌면서 방문했다는 노드 표시인 visited 변수를 False로 만들어야 하기 때문에 노드들 전처리는 $O(V)$ 가 걸린다고 할 수 있다.
+
+<br>
+
+**큐에 노드를 넣고 빼는 데 걸리는 시간**
+
+BFS는 방문한 노드를 표시하고 다시 방문하지 않는다. <br>
+큐는 더블리 링크드 리스트를 사용하면 맨 뒤에 삽입하고 맨 앞에 있는 데이터를 꺼내오는 연산들을 $O(1)$ 으로 할 수 있다. <br>
+최대 V개의 노드들이 큐에 들어갔다 나오므로 걸리는 총 시간은 $O(V)$ 라고 할 수 있다.
+
+<br>
+
+**큐에서 뺀 노드의 인접한 노드들을 도는데 걸리는 시간**
+
+노드가 한 번 나올 때마다 그 노드의 인접 리스트도 딱 한번만 돌기 때문에 E에 비례하는 만큼 실행된다고 할 수 있다. <br>
+큐에서 뺀 노드들의 인접한 노드들을 도는데 $O(E)$ 가 걸린다.
+
+<br>
+
+**정리**
+
+전처리: $O(V)$ <br>
+큐에서 노드 넣고 빼기: $O(V)$ <br>
+인접한 노드들을 도는데 걸리는 시간: $O(E)$ <br>
+총 $O(V+E)$ 의 시간 복잡도가 걸린다고 할 수 있다.
+
+<br><br>
+
+### Depth First Search(DFS)
+
+<br>
+
+그래프를 깊이 우선적으로 탐색한다.
+
+<br>
+
+**알고리즘**
+
+- 시작 노드를 옅은 회색 표시 후, 스택에 넣는다
+- 스택에 아무 노드가 없을 때까지:
+  - 스택 가장 위 노드를 꺼낸다
+  - 노드를 방문(진한 회색) 표시한다
+  - 인접한 노드들을 모두 보면서:
+    - 처음 방문하거나 스택에 없는 노드면:
+      - 옅은 회색 표시를 해준다
+      - 스택에 넣어준다
+
+```python
+from collections import deque
+from subway_graph import *
+
+def dfs(graph, start_node):
+    """dfs 함수"""
+    stack = deque()  # 빈 스택 생성
+
+    # 모든 노드를 처음 보는 노드로 초기화
+    for station_node in graph.values():
+        station_node.visited = 0
+
+    # 시작 노드를 스택에 넣는다는 표시(옅은 회색)를 하고
+    start_node.visited = 1
+    stack.append(start_node)  # 스택에 넣는다
+
+    while stack:  # 스택에 노드가 남아 있을 때까지
+        current_node = stack.pop()  # 스택 가장 위(뒤) 노드를 갖고 온다
+        current_node.visited = 2  # 현재 노드를 방문 표시한다
+        for neighbor in current_node.adjacent_stations:
+            if neighbor.visited == 0:  # 처음 보는 노드들만
+                neighbor.visited = 1  # 스택에 넣는다는 표시를 하고
+                stack.append(neighbor)  # 스택에 넣는다
+
+
+stations = create_station_graph("./new_stations.txt")  # stations.txt 파일로 그래프를 만든다
+
+gangnam_station = stations["강남"]
+
+# 강남역과 경로를 통해 연결된 모든 노드를 탐색
+dfs(stations, gangnam_station)
+
+# 강남역과 서울 지하철 역들 연결됐는지 확인
+print(stations["강동구청"].visited)
+print(stations["평촌"].visited)
+print(stations["송도"].visited)
+print(stations["개화산"].visited)
+
+# 강남역과 대전 지하철 역들 연결됐는지 확인
+print(stations["반석"].visited)
+print(stations["지족"].visited)
+print(stations["노은"].visited)
+print(stations["(대전)신흥"].visited)
+```
+
+<br><br>
+
+### DFS 알고리즘 시간 복잡도
+
+<br>
+
+총 노드의 수를 V, 엣지의 수를 E
+
+<br>
+
+**DFS 노드 전처리**
+
+모든 노드를 노란색 노드로 표시하는 데는 V의 시간이 걸린다. <br>
+노드들 전처리는 $O(V)$ 가 걸린다고 할 수 있다.
+
+<br>
+
+**스택에 노드를 넣고 빼는 데 걸리는 시간**
+
+DFS를 할 때도 스택에 같은 노드가 두 번 들어갈 수 없다. <br>
+스택은 더블리 링크드 리스트를 사용하면 맨 뒤에 삽입하고 맨 뒤에 있는 데이터를 꺼내오는 연산들을 $O(1)$ 으로 할 수 있다. <br>
+최대 V개의 노드들이 스택에 들어갔다 나오므로 노드들이 스택에 들어갔다 나오는 데 걸리는 총 시간은 $O(V)$ 라고 할 수 있다.
+
+<br>
+
+**스택에서 뺀 노드들의 인접한 노드들을 도는데 걸리는 시간**
+
+모든 노드는 스택에 한 번만 들어가서 한 번만 나올수 있기 때문에 모든 노드들의 인접 리스트를 딱 한 번만 돈다고 할 수 있다. <br>
+총 엣지 수가 E니까 이 단계도 총 E에 비례하는 만큼 실행된다고 할 수 있다. <br>
+스택에서 뺀 노드들의 인접한 노드들을 도는데 $O(E)$ 가 걸린다.
+
+<br>
+
+**장리**
+
+전처리: $O(V)$ <br>
+스택에서 노드 넣고 빼기: $O(V)$ <br>
+인접한 노드들을 도는데 걸리는 시간: $O(E)$ <br>
+총 $O(V+E)$ 의 시간 복잡도가 걸린다고 할 수 있다.
