@@ -515,3 +515,80 @@ DFS를 할 때도 스택에 같은 노드가 두 번 들어갈 수 없다. <br>
 스택에서 노드 넣고 빼기: $O(V)$ <br>
 인접한 노드들을 도는데 걸리는 시간: $O(E)$ <br>
 총 $O(V+E)$ 의 시간 복잡도가 걸린다고 할 수 있다.
+
+<br><br>
+
+## 최단 경로 알고리즘 (Shortest Path)
+
+ <br>
+
+두 노드 사이 경로 중 가장 거리가 짧은 경로이다.
+
+<br><br>
+
+### BFS predecessor
+
+- 시작 노드를 방문 표시 후, 큐에 넣는다
+- 큐에 아무 노드가 없을 때까지:
+  - 큐 가장 앞 노드를 꺼낸다
+  - 꺼낸 노드에 인접한 노드들을 모두 보면서:
+    - 처음 방문한 노드면:
+      - 방문한 노드 표시를 해준다
+      - predecessor 변수를 큐에서 꺼낸 노드로 설정
+      - 큐에 넣어준다
+
+<br>
+
+**Backtracking**
+
+- 현재 노드를 경로에 추가한다
+- 현재 노드의 predecessor로 간다
+- predecessor가 없을 때까지 위 단계들 반복
+
+<br>
+
+BFS를 하고 난 후에 도착 노드에서부터 Backtracking을 하면 시작점에서 도착점까지의 최단 경로를 구할 수 있다.
+
+```python
+from collections import deque
+from subway_graph import *
+
+def bfs(graph, start_node):
+    """최단 경로용 bfs 함수"""
+    queue = deque()  # 빈 큐 생성
+
+    # 모든 노드를 방문하지 않은 노드로 표시, 모든 predecessor는 None으로 초기화
+    for station_node in graph.values():
+        station_node.visited = False
+        station_node.predecessor = None
+
+    # 시작점 노드를 방문 표시한 후 큐에 넣어준다
+    start_node.visited = True
+    queue.append(start_node)
+
+    while queue:  # 큐에 노드가 있을 때까지
+        current_station = queue.popleft()  # 큐의 가장 앞 데이터를 갖고 온다
+        for neighbor in current_station.adjacent_stations:  # 인접한 노드를 돌면서
+            if not neighbor.visited:  # 방문하지 않은 노드면
+                neighbor.visited = True  # 방문 표시를 하고
+                neighbor.predecessor = current_station  # 이 노드가 어디서 왔는지 표시
+                queue.append(neighbor)  # 큐에 넣는다
+
+
+def back_track(destination_node):
+    """최단 경로를 찾기 위한 back tracking 함수"""
+    res_str = ""  # 리턴할 결과 문자열
+    temp = destination_node  # 도착 노드에서 시작 노드까지 찾아가는 데 사용할 변수
+
+    # 시작 노드까지 갈 때까지
+    while temp is not None:
+        res_str = f"{temp.station_name} {res_str}"  # 결과 문자열에 역 이름을 더하고
+        temp = temp.predecessor  # temp를 따음 노드로 바꿔준다
+
+    return res_str
+
+stations = create_station_graph("./new_stations.txt")  # stations.txt 파일로 그래프를 만든다
+
+bfs(stations, stations["을지로3가"])  # 지하철 그래프에서 을지로3가역을 시작 노드로 bfs 실행
+print(back_track(stations["강동구청"]))  # 을지로3가에서 강동구청역까지 최단 경로 출력
+```
