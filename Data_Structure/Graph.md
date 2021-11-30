@@ -583,7 +583,7 @@ def back_track(destination_node):
     # 시작 노드까지 갈 때까지
     while temp is not None:
         res_str = f"{temp.station_name} {res_str}"  # 결과 문자열에 역 이름을 더하고
-        temp = temp.predecessor  # temp를 따음 노드로 바꿔준다
+        temp = temp.predecessor  # temp를 다음 노드로 바꿔준다
 
     return res_str
 
@@ -592,3 +592,33 @@ stations = create_station_graph("./new_stations.txt")  # stations.txt 파일로 
 bfs(stations, stations["을지로3가"])  # 지하철 그래프에서 을지로3가역을 시작 노드로 bfs 실행
 print(back_track(stations["강동구청"]))  # 을지로3가에서 강동구청역까지 최단 경로 출력
 ```
+
+<br><br>
+
+### Dijkstra 알고리즘 (가중치 그래프 최단 경로)
+
+Dijkstra 알고리즘을 사용하기 위해서는 그래프 노드에 3가지 변수를 저장해야 한다. <br>
+
+1. distance <br>
+   특정 노드까지의 "최단 거리 예상치" (현재까지 아는 정보로 계산한 최단 거리)
+2. predecessor <br>
+   현재까지 최단 경로에서 바로 직전의 노드
+3. complete <br>
+   노드까지의 최단 경로를 찾았다고 표시하기 위한 변수
+
+<br>
+
+**엣지 Relaxation**
+
+A에서 B를 방문하면서 B의 distance, predecessor을 바꾸는 것
+
+<br>
+
+**일반화**
+
+- 시작점의 distance를 0으로, predecessor를 None으로
+- 모든 노드가 complete 일 때까지:
+  - complete하지 않은 노드 중 distance가 가장 작은 노드 선택
+  - 이 노드에 인접한 노드 중 complete하지 않은 노드를 돌면서:
+    - 각 엣지를 relax 한다
+  - 현재 노드를 complete 처리한다
