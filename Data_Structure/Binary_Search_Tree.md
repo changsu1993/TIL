@@ -290,6 +290,8 @@ print(bst.search(20))
 
 자식 노드가 부모 노드의 자리를 차지하면 된다.
 
+- 경우 3: 삭제하려는 데이터의 노드가 두 개의 자식이 있을 때
+
 <br>
 
 ```python
@@ -331,6 +333,53 @@ class BinarySearchTree:
                     parent_node.left_child = None
                 else:
                     parent_node.right_child = None
+
+        # 경우 2: 지우려는 노드가 자식이 하나인 노드일 때:
+        # 지우려는 노드가 root 노드일 때
+        elif node_to_delete.left_child is None:
+            if node_to_delete is self.foot:
+                self.root = node_to_delete.right_child
+                self.root.parent = None
+
+            # 지우려는 노드가 부모의 왼쪽 자식일 때
+            elif node_to_delete is parent_node.left_child:
+                parent_node.left_child = node_to_delete.right_child
+                node_to_delete.right_child.parent = parent_node
+
+            # 지우려는 노드가 부모의 오른쪽 자식일 때
+            else:
+                parent_node.right_child = node_to_delete.right_child
+                node_to_delete.right_child.parent = parent_node
+
+        # 지우려는 노드가 왼쪽 자식만 있을 때
+        elif node_to_delete.right_child is None:
+            # 지우려는 노드가 root 노드일 때
+            if node_to_delete is self.root:
+                self.root = node_to_delete.left_child
+                self.root.parent = None
+
+            # 지우려는 노드가 부모의 왼쪽 자식일 때
+            elif node_to_delete is parent_node.left_child:
+                parent_node.left_child = node_to_delete.left_child
+                node_to_delete.left_child.parent = parent_node
+
+            # 지우려는 노드가 부모의 오른쪽 자식일 때
+            else:
+                parent_node.right_child = node_to_delete.left_child
+                node_to_delete.left_child.parent = parent_node
+
+        # 경우 3: 지우려는 노드가 2개의 자식이 있을 때
+        else:
+            successor = self.find_min(node_to_delete.right_child) # 삭제하려는 노드의 successor 노드 받아오기
+            node_to_delete.data = successor.data # 삭제하려는 노드의 데이터에 successor의 데이터 저장
+
+            if successor is successor.parent.left_child: # successor 노드가 오른쪽 자식일 때
+                successor.parent.left_child = successor.right_child
+            else: # successor 노드가 왼쪽 자식일 때
+                successor.parent.right_child = successor.right_child
+
+            if successor.right_child is not None: # successor 노드가 오른쪽 자식이 있을 때
+                successor.right_child.parent = successor.parent
 
 
     @staticmethod
@@ -424,3 +473,106 @@ bst.delete(4)
 
 bst.print_sorted_tree()
 ```
+
+<br>
+
+**이진 탐색 트리 삭제 연산 시간 복잡도**
+
+탐색
+
+이진 탐색 트리의 높이를 h라고 했을 때, 탐색 연산은 O(h)의 시간 복잡도가 걸린다. <br>
+
+삭제 경우1: 지우려는 데이터 노드가 leaf 노드일 때
+
+탐색한 노드의 부모에서 자식 레퍼런스를 None으로 지정해주면 된다. 걸리는 시간이 노드 개수나 트리 높이에 비례하지 않는다. O(1)
+<br><br>
+
+삭제 경우2: 지우려는 데이터 노드가 하나의 자식이 있을 때
+
+삭제하려는 노드의 부모의 자식을 삭제하려는 노드의 자식으로 만들어 줬는데 이 때는 어떤 노드인지와 상관없이 레퍼런스 2개만 연결시켜 주면 된다. O(1)
+<br><br>
+
+삭제 경우3: 지우려는 데이터 노드가 두 개의 자식이 있을 때
+
+1. 먼저 지우려는 데이터 노드의 successor 노드를 찾는다. O(h)
+2. 지우려는 노드에 successor 노드의 데이터를 저장한 후 O(h)
+3. successor 노드를 지운다. O(1)
+
+합치면 총 O( h + h + 1)이 걸린다. 즉, O(h) 이다.
+<br><br>
+
+**정리**
+
+삭제 연산 시 3가지 경우들의 시간 복잡도
+
+|       | 탐색 | 탐색 후 단계들 |
+| ----- | ---- | -------------- |
+| 경우1 | O(h) | O(1)           |
+| 경우2 | O(h) | O(1)           |
+| 경우3 | O(h) | O(h)           |
+
+<br><br>
+
+탐색 후 단계들의 시간 복잡도에 제외해두었던 탐색 연산 자체의 시간 복잡도 O(h)까지 더해주면
+
+|       | 탐색 + 탐색 후 단계들 |     |
+| ----- | --------------------- | --- |
+| 경우1 | O(h)                  |     |
+| 경우2 | O(h)                  |     |
+| 경우3 | O(h)                  |     |
+
+<br><br>
+
+**이진 탐색 트리 높이**
+
+이진 탐색 트리 연산들의 시간은 모두 그 높이 h에 비례한다.
+
+- 편향된 트리일수록 연산들이 비효율적으로,
+- 균형이 잡힌 트리일수록 연산들이 효율적으로
+
+이루어진다고 볼 수 있다.
+<br><br>
+
+**정리**
+
+| 이진 탐색 트리 연산 | 시간 복잡도                       |     |
+| ------------------- | --------------------------------- | --- |
+| 삽입                | O(h) (평균적 O(lg(n)), 최악 O(n)) |     |
+| 탐색                | O(h) (평균적 O(lg(n)), 최악 O(n)) |     |
+| 연산                | O(h) (평균적 O(lg(n)), 최악 O(n)) |     |
+
+<br><br>
+
+**이진 탐색 트리로 딕셔너리 구현하기**
+
+```python
+class Node:
+    """이진 탐색 트리 노드 클래스"""
+    def __init__(self, data):
+        self.data = data
+        self.parent = None
+        self.left_child = None
+        self.right_child = None
+
+
+# 딕셔너리용 이진 탐색 트리 노드
+
+class Node:
+    """이진 탐색 트리 노드 클래스"""
+    def __init__(self, key, value):
+        self.key = key
+        self.value = value
+        self.parent = None
+        self.left_child = None
+        self.right_child = None
+```
+
+<br>
+
+**시간 복잡도**
+
+| 이진 탐색 트리 연산                   | 시간 복잡도                    |     |
+| ------------------------------------- | ------------------------------ | --- |
+| key를 이용한 key-value 데이터 쌍 삭제 | O(h) (평균 시간 복잡도 O(lg(n) |     |
+| key를 이용한 노드 또는 value 탐색     | O(h) (평균 시간 복잡도 O(lg(n) |     |
+| key-value 쌍 삽입                     | O(h) (평균 시간 복잡도 O(lg(n) |     |
